@@ -20,6 +20,7 @@ This is a rhasspy example for Home Assistant and Node-Red
 
 ## WHAT YOU NEED TO DO TO USE IT RIGHT AWAY ##
 
+- Have a working rhasspy setup in place.
 - Import the Node-Red flow (rhasspy-flow.json).
 - Import the ini files to rhasspy and fill them or create your own ones or just copy and paste and add your own stuff.
 - In the Node-Red flow, replace the server names in the webhook node in the beginning and speech nodes at the end with you rhasspy / satellites.
