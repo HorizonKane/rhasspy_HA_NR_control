@@ -9,6 +9,7 @@ This is a rhasspy example for Home Assistant and Node-Red
 - Might contain a lot of bugs.
 - This was built out of another example found in the Home Assistant community, which was built out of an rhasspy example flow.
 - I might help with issues when I am available but it might also happen that you don't see me here for a while ;)
+- Speech output might be a little bit clumsy, didn't find the time to care for cosmetics yet. However it is not that bad :)
 
 ## Features: ##
 
