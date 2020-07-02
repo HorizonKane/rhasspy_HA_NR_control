@@ -1,0 +1,1779 @@
+[
+    {
+        "id": "b74f060c.6b2908",
+        "type": "tab",
+        "label": "rhasspy",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "2371c6de.7dd1aa",
+        "type": "websocket in",
+        "z": "b74f060c.6b2908",
+        "name": "rhasspy",
+        "server": "faee4785.602ae8",
+        "client": "",
+        "x": 70,
+        "y": 300,
+        "wires": [
+            [
+                "13b29f95.47317",
+                "3ad46960.efa2e6"
+            ]
+        ]
+    },
+    {
+        "id": "13b29f95.47317",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "intent filter",
+        "property": "intent.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "GetTime",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ChangeLightState",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ChangeLightBrightness",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ChangeLightColor",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ChangeCoverState",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ChangeCoverLevel",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "StopCovers",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ChangeThermLevel",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ActivateHueScene",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 9,
+        "x": 90,
+        "y": 700,
+        "wires": [
+            [
+                "79279baa.e9e9d4"
+            ],
+            [
+                "578747cc.068538"
+            ],
+            [
+                "ca84b3e9.5a66b"
+            ],
+            [
+                "5d060fd2.55171"
+            ],
+            [
+                "a51db419.f2e598"
+            ],
+            [
+                "efb5c31.cb4414"
+            ],
+            [
+                "749d1b68.3610f4"
+            ],
+            [
+                "89703ab1.4068a8"
+            ],
+            [
+                "5e06ec39.227d44"
+            ]
+        ]
+    },
+    {
+        "id": "1182ca43.719406",
+        "type": "http request",
+        "z": "b74f060c.6b2908",
+        "name": "Speech wohnen",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "http://<RHASSPY MASTER>:12101/api/text-to-speech",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "basic",
+        "x": 1400,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "23ea0644.90bb0a",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "single light",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"light\",\n  \"service\": \"turn_{{slots.state}}\",\n  \"data\": {\n    \"entity_id\": \"light.{{slots.name}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 530,
+        "y": 280,
+        "wires": [
+            [
+                "9357b27a.be547"
+            ]
+        ]
+    },
+    {
+        "id": "79279baa.e9e9d4",
+        "type": "function",
+        "z": "b74f060c.6b2908",
+        "name": "time text",
+        "func": "var timeStringH = new Date().toLocaleTimeString([],\n{\n    hour: \"2-digit\", \n    hour12: false\n})\n\nvar timeStringM = new Date().toLocaleTimeString([],\n{\n    minute: \"2-digit\",\n    hour12: false\n})\n\nmsg.payload = \"Wir haben jetzt \" + timeStringH + \" Uhr \" + timeStringM;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 520,
+        "y": 160,
+        "wires": [
+            [
+                "23ced674.397eea"
+            ]
+        ]
+    },
+    {
+        "id": "3ad46960.efa2e6",
+        "type": "debug",
+        "z": "b74f060c.6b2908",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 90,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9357b27a.be547",
+        "type": "api-call-service",
+        "z": "b74f060c.6b2908",
+        "name": "",
+        "server": "7e24b1f3.1fe48",
+        "version": 1,
+        "debugenabled": true,
+        "service_domain": "",
+        "service": "",
+        "entityId": "",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 710,
+        "y": 280,
+        "wires": [
+            [
+                "c598316b.25581"
+            ]
+        ]
+    },
+    {
+        "id": "ab8cba75.78bf28",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "Light Text",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Okay, {{slots.name}} wird {{slots.state}}!",
+        "output": "str",
+        "x": 1040,
+        "y": 280,
+        "wires": [
+            [
+                "23ced674.397eea"
+            ]
+        ]
+    },
+    {
+        "id": "38985542.c239ca",
+        "type": "http request",
+        "z": "b74f060c.6b2908",
+        "name": "Speech schlafen",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "http://<RHASPPY SATELLITE 2>/api/text-to-speech",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "basic",
+        "x": 1410,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "23ced674.397eea",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "speech routing",
+        "property": "siteId",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "wohnzimmer",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "schlafzimmer",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "kueche",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 1400,
+        "y": 620,
+        "wires": [
+            [
+                "1182ca43.719406"
+            ],
+            [
+                "38985542.c239ca"
+            ],
+            [
+                "f59e5ef4.3391f"
+            ]
+        ]
+    },
+    {
+        "id": "4ee9ed9b.77cd94",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "single light bright",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"light\",\n  \"service\": \"turn_on\",\n  \"data\": {\n    \"entity_id\": \"light.{{slots.name}}\",\n    \"brightness_pct\": \"{{slots.brightness}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 550,
+        "y": 380,
+        "wires": [
+            [
+                "56bdb2bd.e0861c"
+            ]
+        ]
+    },
+    {
+        "id": "56bdb2bd.e0861c",
+        "type": "api-call-service",
+        "z": "b74f060c.6b2908",
+        "name": "",
+        "server": "7e24b1f3.1fe48",
+        "version": 1,
+        "debugenabled": true,
+        "service_domain": "",
+        "service": "",
+        "entityId": "",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 710,
+        "y": 380,
+        "wires": [
+            [
+                "ac31f923.65d9b8"
+            ]
+        ]
+    },
+    {
+        "id": "ac31f923.65d9b8",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "Light Text",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Okay, {{slots.name}} auf {{slots.brightness}} Prozent!",
+        "output": "str",
+        "x": 1040,
+        "y": 380,
+        "wires": [
+            [
+                "23ced674.397eea"
+            ]
+        ]
+    },
+    {
+        "id": "d9a039b9.596a08",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "single light color",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"light\",\n  \"service\": \"turn_on\",\n  \"data\": {\n    \"entity_id\": \"light.{{slots.name}}\",\n    \"color_name\": \"{{slots.color}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 540,
+        "y": 480,
+        "wires": [
+            [
+                "24904ec7.3e44d2"
+            ]
+        ]
+    },
+    {
+        "id": "24904ec7.3e44d2",
+        "type": "api-call-service",
+        "z": "b74f060c.6b2908",
+        "name": "",
+        "server": "7e24b1f3.1fe48",
+        "version": 1,
+        "debugenabled": true,
+        "service_domain": "",
+        "service": "",
+        "entityId": "",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 710,
+        "y": 480,
+        "wires": [
+            [
+                "4c4f6d7d.3eead4"
+            ]
+        ]
+    },
+    {
+        "id": "d5f4f4de.f5bd88",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "Light Text",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Okay, {{slots.color}} Licht für {{slots.name}}!",
+        "output": "str",
+        "x": 1040,
+        "y": 480,
+        "wires": [
+            [
+                "23ced674.397eea"
+            ]
+        ]
+    },
+    {
+        "id": "f59e5ef4.3391f",
+        "type": "http request",
+        "z": "b74f060c.6b2908",
+        "name": "Speech Kueche",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "http://<RHASSPY SATELLITE 1>:12101/api/text-to-speech",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "basic",
+        "x": 1400,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4ce34129.33c61",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "all lights",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "all",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 520,
+        "y": 240,
+        "wires": [
+            [
+                "94d1b0d4.63c22"
+            ],
+            [
+                "23ea0644.90bb0a"
+            ]
+        ]
+    },
+    {
+        "id": "94d1b0d4.63c22",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "all lights",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"light\",\n  \"service\": \"turn_{{slots.state}}\",\n  \"data\": {\n    \"entity_id\": \"{{slots.name}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 700,
+        "y": 240,
+        "wires": [
+            [
+                "9357b27a.be547"
+            ]
+        ]
+    },
+    {
+        "id": "f74ddb.d06ec228",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "all lights",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "all",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 520,
+        "y": 340,
+        "wires": [
+            [
+                "62965969.4928b8"
+            ],
+            [
+                "4ee9ed9b.77cd94"
+            ]
+        ]
+    },
+    {
+        "id": "62965969.4928b8",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "all lights",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"light\",\n  \"service\": \"turn_{{slots.state}}\",\n  \"data\": {\n    \"entity_id\": \"{{slots.name}}\",\n    \"brightness_pct\": \"{{slots.brightness}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 700,
+        "y": 340,
+        "wires": [
+            [
+                "56bdb2bd.e0861c"
+            ]
+        ]
+    },
+    {
+        "id": "31e624a7.dc1c4c",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "all lights",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "all",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 520,
+        "y": 440,
+        "wires": [
+            [
+                "1a090a6.9fe91f6"
+            ],
+            [
+                "d9a039b9.596a08"
+            ]
+        ]
+    },
+    {
+        "id": "1a090a6.9fe91f6",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "all lights",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"light\",\n  \"service\": \"turn_on\",\n  \"data\": {\n    \"entity_id\": \"{{slots.name}}\",\n    \"color_name\": \"{{slots.color}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 700,
+        "y": 440,
+        "wires": [
+            [
+                "24904ec7.3e44d2"
+            ]
+        ]
+    },
+    {
+        "id": "c598316b.25581",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "On/Off tranlator",
+        "rules": [
+            {
+                "t": "change",
+                "p": "slots.state",
+                "pt": "msg",
+                "from": "on",
+                "fromt": "str",
+                "to": "eingeschaltet",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.state",
+                "pt": "msg",
+                "from": "off",
+                "fromt": "str",
+                "to": "abgeschaltet",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 880,
+        "y": 280,
+        "wires": [
+            [
+                "ab8cba75.78bf28"
+            ]
+        ]
+    },
+    {
+        "id": "4c4f6d7d.3eead4",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "Color translator",
+        "rules": [
+            {
+                "t": "change",
+                "p": "slots.color",
+                "pt": "msg",
+                "from": "navajowhite",
+                "fromt": "str",
+                "to": "warmes",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.color",
+                "pt": "msg",
+                "from": "green",
+                "fromt": "str",
+                "to": "grünes",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.color",
+                "pt": "msg",
+                "from": "purple",
+                "fromt": "str",
+                "to": "lila",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.color",
+                "pt": "msg",
+                "from": "red",
+                "fromt": "str",
+                "to": "rotes",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.color",
+                "pt": "msg",
+                "from": "yellow",
+                "fromt": "str",
+                "to": "gelbes",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.color",
+                "pt": "msg",
+                "from": "blue",
+                "fromt": "str",
+                "to": "blaues",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.color",
+                "pt": "msg",
+                "from": "violet",
+                "fromt": "str",
+                "to": "violettes",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.color",
+                "pt": "msg",
+                "from": "white",
+                "fromt": "str",
+                "to": "weißes",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 880,
+        "y": 480,
+        "wires": [
+            [
+                "d5f4f4de.f5bd88"
+            ]
+        ]
+    },
+    {
+        "id": "2465de75.c29d02",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "cover up / down",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"cover\",\n  \"service\": \"{{slots.state}}_cover\",\n  \"data\": {\n    \"entity_id\": \"cover.{{slots.name}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 540,
+        "y": 580,
+        "wires": [
+            [
+                "c9958949.024cb8"
+            ]
+        ]
+    },
+    {
+        "id": "c9958949.024cb8",
+        "type": "api-call-service",
+        "z": "b74f060c.6b2908",
+        "name": "",
+        "server": "7e24b1f3.1fe48",
+        "version": 1,
+        "debugenabled": true,
+        "service_domain": "",
+        "service": "",
+        "entityId": "",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 710,
+        "y": 580,
+        "wires": [
+            [
+                "58215b5d.88f934"
+            ]
+        ]
+    },
+    {
+        "id": "618f5d19.9d6a74",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "Cover Text",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Okay, {{slots.name}} wird {{slots.state}}!",
+        "output": "str",
+        "x": 1050,
+        "y": 580,
+        "wires": [
+            [
+                "23ced674.397eea"
+            ]
+        ]
+    },
+    {
+        "id": "b6c7989f.bbfa88",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "all covers",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "all",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 520,
+        "y": 540,
+        "wires": [
+            [
+                "409635b3.73491c"
+            ],
+            [
+                "2465de75.c29d02"
+            ]
+        ]
+    },
+    {
+        "id": "409635b3.73491c",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "cover up / down",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"cover\",\n  \"service\": \"{{slots.state}}_cover\",\n  \"data\": {\n    \"entity_id\": \"{{slots.name}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 700,
+        "y": 540,
+        "wires": [
+            [
+                "c9958949.024cb8"
+            ]
+        ]
+    },
+    {
+        "id": "58215b5d.88f934",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "On/Off tranlator",
+        "rules": [
+            {
+                "t": "change",
+                "p": "slots.state",
+                "pt": "msg",
+                "from": "open",
+                "fromt": "str",
+                "to": "geöffnet",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.state",
+                "pt": "msg",
+                "from": "close",
+                "fromt": "str",
+                "to": "geschlossen",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 880,
+        "y": 580,
+        "wires": [
+            [
+                "618f5d19.9d6a74"
+            ]
+        ]
+    },
+    {
+        "id": "19100cb6.b29903",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "cover pct",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"cover\",\n  \"service\": \"set_cover_position\",\n  \"data\": {\n    \"entity_id\": \"cover.{{slots.name}}\",\n    \"position\": \"{{slots.level}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 520,
+        "y": 680,
+        "wires": [
+            [
+                "51bee0c8.d0f82"
+            ]
+        ]
+    },
+    {
+        "id": "51bee0c8.d0f82",
+        "type": "api-call-service",
+        "z": "b74f060c.6b2908",
+        "name": "",
+        "server": "7e24b1f3.1fe48",
+        "version": 1,
+        "debugenabled": true,
+        "service_domain": "",
+        "service": "",
+        "entityId": "",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 710,
+        "y": 680,
+        "wires": [
+            [
+                "3a45497.1194fb6"
+            ]
+        ]
+    },
+    {
+        "id": "3a45497.1194fb6",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "Cover Text",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Okay, {{slots.name}} auf {{slots.level}} Prozent!",
+        "output": "str",
+        "x": 1050,
+        "y": 680,
+        "wires": [
+            [
+                "23ced674.397eea"
+            ]
+        ]
+    },
+    {
+        "id": "77602d0e.7fea34",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "all covers",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "all",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 520,
+        "y": 640,
+        "wires": [
+            [
+                "636d5d3b.4b2164"
+            ],
+            [
+                "19100cb6.b29903"
+            ]
+        ]
+    },
+    {
+        "id": "636d5d3b.4b2164",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "cover pct",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"cover\",\n  \"service\": \"set_cover_position\",\n  \"data\": {\n    \"entity_id\": \"{{slots.name}}\",\n    \"position\": \"{{slots.level}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 700,
+        "y": 640,
+        "wires": [
+            [
+                "51bee0c8.d0f82"
+            ]
+        ]
+    },
+    {
+        "id": "6a931fd1.3cfe3",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "activate hue scene",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"hue\",\n  \"service\": \"hue_activate_scene\",\n  \"data\": {\n    \"scene_name\": \"{{slots.scene}}\",\n    \"group_name\": \"{{slots.room}}\"\n  }\n}",
+        "output": "json",
+        "x": 550,
+        "y": 940,
+        "wires": [
+            [
+                "216ab652.89bd7a"
+            ]
+        ]
+    },
+    {
+        "id": "632c395b.1ae5b8",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "Scene Text",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Okay, {{slots.scene}} aktiviert!",
+        "output": "str",
+        "x": 1050,
+        "y": 940,
+        "wires": [
+            [
+                "23ced674.397eea"
+            ]
+        ]
+    },
+    {
+        "id": "216ab652.89bd7a",
+        "type": "api-call-service",
+        "z": "b74f060c.6b2908",
+        "name": "",
+        "server": "7e24b1f3.1fe48",
+        "version": 1,
+        "debugenabled": true,
+        "service_domain": "",
+        "service": "",
+        "entityId": "",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 730,
+        "y": 940,
+        "wires": [
+            [
+                "632c395b.1ae5b8"
+            ]
+        ]
+    },
+    {
+        "id": "5e06ec39.227d44",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "room or siteid",
+        "property": "slots.room",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 340,
+        "y": 940,
+        "wires": [
+            [
+                "6a931fd1.3cfe3"
+            ],
+            [
+                "498e1c6e.7b6524"
+            ]
+        ]
+    },
+    {
+        "id": "498e1c6e.7b6524",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "siteId to room",
+        "rules": [
+            {
+                "t": "set",
+                "p": "slots.room",
+                "pt": "msg",
+                "to": "siteId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 980,
+        "wires": [
+            [
+                "cbcf02a1.2cae4"
+            ]
+        ]
+    },
+    {
+        "id": "cbcf02a1.2cae4",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "Upper HUE groupname",
+        "rules": [
+            {
+                "t": "change",
+                "p": "slots.room",
+                "pt": "msg",
+                "from": "kueche",
+                "fromt": "str",
+                "to": "Kueche",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.room",
+                "pt": "msg",
+                "from": "wohnzimmer",
+                "fromt": "str",
+                "to": "Wohnzimmer",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "slots.room",
+                "pt": "msg",
+                "from": "schlafzimmer",
+                "fromt": "str",
+                "to": "Schlafzimmer",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 980,
+        "wires": [
+            [
+                "6a931fd1.3cfe3"
+            ]
+        ]
+    },
+    {
+        "id": "c9b0f244.8e4cb",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "therm deg",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"climate\",\n  \"service\": \"set_temperature\",\n  \"data\": {\n    \"entity_id\": \"climate.{{slots.name}}\",\n    \"temperature\": \"{{slots.degrees}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 540,
+        "y": 880,
+        "wires": [
+            [
+                "169c4eb0.d6c2e1"
+            ]
+        ]
+    },
+    {
+        "id": "169c4eb0.d6c2e1",
+        "type": "api-call-service",
+        "z": "b74f060c.6b2908",
+        "name": "",
+        "server": "7e24b1f3.1fe48",
+        "version": 1,
+        "debugenabled": true,
+        "service_domain": "",
+        "service": "",
+        "entityId": "",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 730,
+        "y": 880,
+        "wires": [
+            [
+                "40c25dc0.2cabc4"
+            ]
+        ]
+    },
+    {
+        "id": "40c25dc0.2cabc4",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "Thermostat Text",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Okay, {{slots.name}} auf {{slots.degrees}} Grad eingestellt!",
+        "output": "str",
+        "x": 1060,
+        "y": 880,
+        "wires": [
+            [
+                "23ced674.397eea"
+            ]
+        ]
+    },
+    {
+        "id": "5226b7d8.df29f8",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "all thermostats",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "all",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 560,
+        "y": 840,
+        "wires": [
+            [
+                "957a5439.74ac38"
+            ],
+            [
+                "c9b0f244.8e4cb"
+            ]
+        ]
+    },
+    {
+        "id": "957a5439.74ac38",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "all thermostats deg",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"climate\",\n  \"service\": \"set_temperature\",\n  \"data\": {\n    \"entity_id\": \"{{slots.name}}\",\n    \"temperature\": \"{{slots.degrees}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 770,
+        "y": 840,
+        "wires": [
+            [
+                "169c4eb0.d6c2e1"
+            ]
+        ]
+    },
+    {
+        "id": "578747cc.068538",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "name or siteid",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 340,
+        "y": 240,
+        "wires": [
+            [
+                "4ce34129.33c61"
+            ],
+            [
+                "cf4d5f6a.2b9ed"
+            ]
+        ]
+    },
+    {
+        "id": "cf4d5f6a.2b9ed",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "siteId to name",
+        "rules": [
+            {
+                "t": "set",
+                "p": "slots.name",
+                "pt": "msg",
+                "to": "siteId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 280,
+        "wires": [
+            [
+                "23ea0644.90bb0a"
+            ]
+        ]
+    },
+    {
+        "id": "ca84b3e9.5a66b",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "name or siteid",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 340,
+        "y": 340,
+        "wires": [
+            [
+                "f74ddb.d06ec228"
+            ],
+            [
+                "c69fd068.43724"
+            ]
+        ]
+    },
+    {
+        "id": "c69fd068.43724",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "siteId to name",
+        "rules": [
+            {
+                "t": "set",
+                "p": "slots.name",
+                "pt": "msg",
+                "to": "siteId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 380,
+        "wires": [
+            [
+                "4ee9ed9b.77cd94"
+            ]
+        ]
+    },
+    {
+        "id": "5d060fd2.55171",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "name or siteid",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 340,
+        "y": 440,
+        "wires": [
+            [
+                "31e624a7.dc1c4c"
+            ],
+            [
+                "7c29390b.faa198"
+            ]
+        ]
+    },
+    {
+        "id": "7c29390b.faa198",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "siteId to name",
+        "rules": [
+            {
+                "t": "set",
+                "p": "slots.name",
+                "pt": "msg",
+                "to": "siteId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 480,
+        "wires": [
+            [
+                "d9a039b9.596a08"
+            ]
+        ]
+    },
+    {
+        "id": "a51db419.f2e598",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "name or siteid",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 340,
+        "y": 540,
+        "wires": [
+            [
+                "b6c7989f.bbfa88"
+            ],
+            [
+                "8a257e57.20bcb"
+            ]
+        ]
+    },
+    {
+        "id": "8a257e57.20bcb",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "siteId to name",
+        "rules": [
+            {
+                "t": "set",
+                "p": "slots.name",
+                "pt": "msg",
+                "to": "siteId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 580,
+        "wires": [
+            [
+                "2465de75.c29d02"
+            ]
+        ]
+    },
+    {
+        "id": "988cb22d.818cd",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "siteId to name",
+        "rules": [
+            {
+                "t": "set",
+                "p": "slots.name",
+                "pt": "msg",
+                "to": "siteId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 680,
+        "wires": [
+            [
+                "19100cb6.b29903"
+            ]
+        ]
+    },
+    {
+        "id": "efb5c31.cb4414",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "name or siteid",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 340,
+        "y": 640,
+        "wires": [
+            [
+                "77602d0e.7fea34"
+            ],
+            [
+                "988cb22d.818cd"
+            ]
+        ]
+    },
+    {
+        "id": "89703ab1.4068a8",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "name or siteid",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 340,
+        "y": 840,
+        "wires": [
+            [
+                "5226b7d8.df29f8"
+            ],
+            [
+                "c498d4ed.787298"
+            ]
+        ]
+    },
+    {
+        "id": "c498d4ed.787298",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "siteId to name",
+        "rules": [
+            {
+                "t": "set",
+                "p": "slots.name",
+                "pt": "msg",
+                "to": "siteId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 880,
+        "wires": [
+            [
+                "c9b0f244.8e4cb"
+            ]
+        ]
+    },
+    {
+        "id": "8f1580da.08279",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "cover stop",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"cover\",\n  \"service\": \"stop_cover\",\n  \"data\": {\n    \"entity_id\": \"cover.{{slots.name}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 530,
+        "y": 780,
+        "wires": [
+            [
+                "daf8e698.f920c8"
+            ]
+        ]
+    },
+    {
+        "id": "daf8e698.f920c8",
+        "type": "api-call-service",
+        "z": "b74f060c.6b2908",
+        "name": "",
+        "server": "7e24b1f3.1fe48",
+        "version": 1,
+        "debugenabled": true,
+        "service_domain": "",
+        "service": "",
+        "entityId": "",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 710,
+        "y": 780,
+        "wires": [
+            [
+                "7d49e251.cc13bc"
+            ]
+        ]
+    },
+    {
+        "id": "7d49e251.cc13bc",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "Cover Text",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Okay, gestoppt!",
+        "output": "str",
+        "x": 1050,
+        "y": 780,
+        "wires": [
+            [
+                "23ced674.397eea"
+            ]
+        ]
+    },
+    {
+        "id": "cfdfcad1.0d5be8",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "all covers",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "all",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 520,
+        "y": 740,
+        "wires": [
+            [
+                "4f0ec5fb.e2593c"
+            ],
+            [
+                "8f1580da.08279"
+            ]
+        ]
+    },
+    {
+        "id": "4f0ec5fb.e2593c",
+        "type": "template",
+        "z": "b74f060c.6b2908",
+        "name": "all covers stop",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"domain\": \"cover\",\n  \"service\": \"stop_cover\",\n  \"data\": {\n    \"entity_id\": \"{{slots.name}}\"\n  }\n}\n",
+        "output": "json",
+        "x": 700,
+        "y": 740,
+        "wires": [
+            [
+                "daf8e698.f920c8"
+            ]
+        ]
+    },
+    {
+        "id": "8846ea11.a70398",
+        "type": "change",
+        "z": "b74f060c.6b2908",
+        "name": "siteId to name",
+        "rules": [
+            {
+                "t": "set",
+                "p": "slots.name",
+                "pt": "msg",
+                "to": "siteId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 780,
+        "wires": [
+            [
+                "8f1580da.08279"
+            ]
+        ]
+    },
+    {
+        "id": "749d1b68.3610f4",
+        "type": "switch",
+        "z": "b74f060c.6b2908",
+        "name": "name or siteid",
+        "property": "slots.name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 340,
+        "y": 740,
+        "wires": [
+            [
+                "cfdfcad1.0d5be8"
+            ],
+            [
+                "8846ea11.a70398"
+            ]
+        ]
+    },
+    {
+        "id": "faee4785.602ae8",
+        "type": "websocket-listener",
+        "z": "",
+        "path": "ws://<RHASSPY MASTER>:12101/api/events/intent",
+        "wholemsg": "true"
+    },
+    {
+        "id": "7e24b1f3.1fe48",
+        "type": "server",
+        "z": "",
+        "name": "Home Assistant",
+        "legacy": false,
+        "addon": true,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "y|yes|true|on|home|open",
+        "connectionDelay": false,
+        "cacheJson": true
+    }
+]
