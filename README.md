@@ -1,4 +1,4 @@
-# rhasspyexamples
+# rhasspy_HA_NR_control
 This is a rhasspy example for Home Assistant and Node-Red
 
 ## IMPORTANT ##
